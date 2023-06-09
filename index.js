@@ -2,14 +2,14 @@ const { ethers } = require('ethers');
 const sqlite3 = require('sqlite3');
 
 const db = new sqlite3.Database('contract-address.db');
-const provider = new ethers.providers.JsonRpcProvider('http://geth.dappnode:8545/');
+const provider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/0b88541a586942fd88c33b828d6412d7');
 
 // const BLOCK_START = 17165000; // May 1st
-const BLOCK_START = 17167595;
+const BLOCK_START = 17203590;
 const BLOCK_END = 17265000;
 // const BLOCK_END = 17380000;
 
-// const WAIT_TIME = 10;
+const WAIT_TIME = 50;
 
 function initDatabase() {
   // db.runSync('CREATE TABLE IF NOT EXISTS state (id INT PRIMARY KEY, name TEXT)');
@@ -20,7 +20,7 @@ function initDatabase() {
 async function getTransactions(block) {
   try {
     const blockWithTransactions = await provider.getBlockWithTransactions(block);
-    // await new Promise(resolve => setTimeout(resolve, WAIT_TIME));
+    await new Promise(resolve => setTimeout(resolve, WAIT_TIME));
     return blockWithTransactions.transactions;
   } catch (error) {
     console.log(error);
@@ -51,10 +51,10 @@ async function getContractsDeployed (destinationPath) {
     }
 
     console.timeEnd('total run time');
+    db.close();
   } catch (error) {
     console.log(error);
   }
 }
 
 getContractsDeployed();
-db.close();
