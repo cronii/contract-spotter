@@ -1,0 +1,29 @@
+{
+  "name": "contract-spotter",
+  "version": "1.0.0",
+  "description": "scripts to find contracts deployed in a block range",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cronii/contract-spotter.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/cronii/contract-spotter/issues"
+  },
+  "homepage": "https://github.com/cronii/contract-spotter#readme",
+  "devDependencies": {
+    "eslint": "^8.42.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.0",
+    "eslint-plugin-promise": "^6.1.1"
+  },
+  "dependencies": {
+    "ethers": "^5.7.2",
+    "sqlite3": "^5.1.6"
+  }
+}
