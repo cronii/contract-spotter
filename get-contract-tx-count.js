@@ -14,18 +14,22 @@ const fetch = require('node-fetch');
     });
 
     // get all contracts deployed
-    const contracts = await db.all('SELECT address FROM contracts');
+    // const contracts = await db.all('SELECT address FROM contracts');
 
-    // create temp table to store contract info (num transactions)
-    await db.run('CREATE TABLE IF NOT EXISTS contracts_info (address TEXT PRIMARY KEY, transactions INT)');
+    // get all unnamed contracts
+    const contracts = await db.all('SELECT contracts.address FROM contracts LEFT JOIN contract_info ON contracts.address = contract_info.address WHERE contract_info.name IS NULL');
+
+    await db.run('CREATE TABLE IF NOT EXISTS contract_tx (address TEXT PRIMARY KEY, transactions INT)');
 
     for (const contract of contracts) {
       const { address } = contract;
+      console.time(address);
+
       const response = await fetch(`http://localhost:8080/slurp?addrs=${address}`);
       const data = await response.json();
 
-      console.log(data.data.length);
-      db.run('INSERT INTO contracts_info (address, transactions) VALUES (?, ?)', [address, data.data.length]);
+      await db.run('INSERT INTO contract_tx (address, transactions) VALUES (?, ?)', [address, data.data.length]);
+      console.timeEnd(address);
     }
 
     await db.close();

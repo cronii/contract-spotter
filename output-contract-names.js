@@ -2,7 +2,7 @@ const fs = require('fs');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 
-const OUTPUT_PATH = './output/named-addresses.html';
+const OUTPUT_PATH = './output/named-contracts.html';
 
 (async () => {
   try {
@@ -13,6 +13,9 @@ const OUTPUT_PATH = './output/named-addresses.html';
 
     // get all contracts deployed
     const contracts = await db.all('SELECT * FROM contract_info');
+
+    // empty file before appending
+    await fs.promises.writeFile(OUTPUT_PATH, '');
 
     for (const contract of contracts) {
       const { address, name } = contract;

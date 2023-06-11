@@ -2,7 +2,7 @@ const fs = require('fs');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 
-const OUTPUT_PATH = './output/manual-17203590.html';
+const OUTPUT_PATH = './output/unnamed-contract-tx-count.html';
 
 (async () => {
   try {
@@ -12,13 +12,18 @@ const OUTPUT_PATH = './output/manual-17203590.html';
     });
 
     // get all contracts deployed
-    const contracts = await db.all('SELECT * FROM contracts_info ORDER BY transactions DESC');
+    const contracts = await db.all('SELECT * FROM contract_tx WHERE transactions > 1 ORDER BY transactions DESC');
+
+    // empty file before appending
+    await fs.promises.writeFile(OUTPUT_PATH, '');
+
     for (const contract of contracts) {
       const { address, transactions } = contract;
-      const wrappedElement = `<div><a href="https://etherscan.io/address/${address}">${address}: ${transactions} txs</a></div>\n`;
+      const wrappedElement = `<div><a href="https://etherscan.io/address/${address}" target="_blank">${address}: ${transactions} txs</a></div>\n`;
       await fs.promises.appendFile(OUTPUT_PATH, wrappedElement + '\n');
     }
 
+    console.log(`${contracts.length} contracts returned`);
     await db.close();
   } catch (err) {
     console.error();
