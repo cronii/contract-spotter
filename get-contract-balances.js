@@ -25,22 +25,27 @@ const COMMON_TOKENS = {
 
 (async () => {
   try {
-    const errorLog = `${ERROR_LOG}-${Date.now()}`;
     const provider = new ethers.providers.JsonRpcProvider(CONFIG.rpcGeth);
     const db = await open({
       filename: 'contract-address.db',
       driver: sqlite3.Database
     });
 
-    // ethers.utils.formatUnits()
+    const timestamp = Date.now();
+    console.time('total run time');
+    let updates = 0;
 
-    // get addresses from contact_tx (which is only populated with contracts that did not return anything from name function)
-    // const query = 'SELECT contract_tx.address FROM contract_tx LEFT JOIN contract_symbols ON contract_tx.address = contract_symbols.address WHERE contract_symbols.symbol IS NULL AND contract_tx.transactions > 1';
+    const query = `SELECT * FROM v_contract_info
+    WHERE name IS NULL
+    AND usdc IS NULL
+    AND usdt IS NULL
+    AND weth IS NULL
+    AND balanceProcessed IS NULL`;
 
-    const query = 'SELECT * FROM v_contract_info';
     const contractAddresses = await db.all(query);
+    console.log(`${contractAddresses.length} contracts found`);
 
-    await db.run('CREATE TABLE IF NOT EXISTS contract_balances (address TEXT PRIMARY KEY, usdc REAL, usdt REAL, weth REAL)');
+    await db.run('CREATE TABLE IF NOT EXISTS contract_balances (address TEXT PRIMARY KEY, usdc REAL, usdt REAL, weth REAL, processed INT)');
 
     // instantiate common erc20 contracts
     const ContractUSDC = new ethers.Contract(COMMON_TOKENS.USDC.address, ABI, provider);
@@ -61,6 +66,8 @@ const COMMON_TOKENS = {
         const realUSDT = ethers.utils.formatUnits(balanceUSDT, COMMON_TOKENS.USDT.decimals);
         const realWETH = ethers.utils.formatUnits(balanceWETH, COMMON_TOKENS.WETH.decimals);
 
+        await db.run('INSERT OR REPLACE INTO contract_balances (address, usdc, usdt, weth, processed) VALUES (?, ?, ?, ?, ?)', [address, realUSDC, realUSDT, realWETH, timestamp]);
+
         if (realUSDC > 0) {
           console.log(`${address}: ${realUSDC} USDC`);
         }
@@ -73,15 +80,17 @@ const COMMON_TOKENS = {
           console.log(`${address}: ${realWETH} WETH`);
         }
 
-        await db.run('INSERT OR REPLACE INTO contract_balances (address, usdc, usdt, weth) VALUES (?, ?, ?, ?)', [address, realUSDC, realUSDT, realWETH]);
+        updates++;
         console.timeEnd(address);
       } catch (error) {
         console.error(error);
-        await fs.promises.appendFile(errorLog, JSON.stringify(error, null, 2));
+        await fs.promises.appendFile(`${ERROR_LOG}-${timestamp}`, JSON.stringify(error, null, 2));
       }
     }
 
-    console.log(`processed ${contractAddresses.length} contracts`);
+    console.log(`${contractAddresses.length} contracts processed`);
+    console.log(`${updates} updated contracts`);
+    console.timeEnd('total run time');
     await db.close();
   } catch (err) {
     console.error(err);

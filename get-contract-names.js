@@ -1,10 +1,10 @@
 const fs = require('fs');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
+const { ethers } = require('ethers');
 
 const CONFIG = require('./config.json');
 const ABI = require('./abi/abi-erc-20.json');
-const { ethers } = require('ethers');
 
 const ERROR_LOG = './output/errorlog-get-contract-name';
 
@@ -19,13 +19,12 @@ const ERROR_LOG = './output/errorlog-get-contract-name';
     const timestamp = Date.now();
     let updates = 0;
 
-    const query = `SELECT contracts.address FROM contracts
-    LEFT JOIN contract_name
-    ON contracts.address = contract_name.address
-    WHERE contract_name.name IS NULL
-    AND contract_name.processed IS NULL`;
+    const query = `SELECT * FROM v_contract_info
+    WHERE name IS NULL
+    AND nameProcessed IS NULL`;
+
     const contractAddresses = await db.all(query);
-    console.log(`found ${contractAddresses.length} contracts`);
+    console.log(`${contractAddresses.length} contracts found`);
 
     await db.run('CREATE TABLE IF NOT EXISTS contract_name (address TEXT PRIMARY KEY, name TEXT, processed INT)');
 
