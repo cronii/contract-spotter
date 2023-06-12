@@ -3,7 +3,7 @@ const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const fetch = require('node-fetch');
 
-const Utils = require('./utils');
+const Utils = require('./utils/utils');
 const Config = require('./config.json');
 
 const WAIT_TIME = 250;

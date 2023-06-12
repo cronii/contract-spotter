@@ -4,7 +4,7 @@ const { open } = require('sqlite');
 const { ethers } = require('ethers');
 
 const CONFIG = require('./config.json');
-const UTILS = require('./utils');
+const UTILS = require('./utils/utils');
 
 const OUTPUT_SYMBOLS = './reports/get-contract-symbol.html';
 const OUTPUT_SYMBOLESS = './reports/symboless-contracts.html';

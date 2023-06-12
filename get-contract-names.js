@@ -4,7 +4,7 @@ const { open } = require('sqlite');
 const { ethers } = require('ethers');
 
 const CONFIG = require('./config.json');
-const ABI = require('./abi/abi-erc-20.json');
+const ABI = require('./utils/abi-erc-20.json');
 
 const ERROR_LOG = './error-logs/error-get-contract-name';
 

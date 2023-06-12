@@ -4,24 +4,10 @@ const { open } = require('sqlite');
 const { ethers } = require('ethers');
 
 const CONFIG = require('./config.json');
-const ABI = require('./abi/abi-erc-20.json');
+const ABI = require('./utils/abi-erc-20.json');
+const COMMON_TOKENS = require('./utils/common-tokens.json');
 
 const ERROR_LOG = './error-logs/error-get-contract-balance';
-
-const COMMON_TOKENS = {
-  USDC: {
-    address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-    decimals: 6
-  },
-  USDT: {
-    address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    decimals: 6
-  },
-  WETH: {
-    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    decimals: 18
-  }
-};
 
 (async () => {
   try {
