@@ -6,9 +6,9 @@ const { ethers } = require('ethers');
 const CONFIG = require('./config.json');
 const UTILS = require('./utils');
 
-const OUTPUT_SYMBOLS = './output/get-contract-symbol.html';
-const OUTPUT_SYMBOLESS = './output/symboless-contracts.html';
-const ERROR_LOG = './output/errorlog-get-contract-info';
+const OUTPUT_SYMBOLS = './reports/get-contract-symbol.html';
+const OUTPUT_SYMBOLESS = './reports/symboless-contracts.html';
+const ERROR_LOG = './error-logs/error-get-contract-info';
 
 const WAIT_TIME = 100;
 const ABI = [{

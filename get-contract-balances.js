@@ -6,7 +6,7 @@ const { ethers } = require('ethers');
 const CONFIG = require('./config.json');
 const ABI = require('./abi/abi-erc-20.json');
 
-const ERROR_LOG = './output/errorlog-get-contract-balance';
+const ERROR_LOG = './error-logs/error-get-contract-balance';
 
 const COMMON_TOKENS = {
   USDC: {

@@ -6,7 +6,7 @@ const { ethers } = require('ethers');
 const CONFIG = require('./config.json');
 const ABI = require('./abi/abi-erc-20.json');
 
-const ERROR_LOG = './output/errorlog-get-contract-name';
+const ERROR_LOG = './error-logs/error-get-contract-name';
 
 (async () => {
   try {
@@ -35,8 +35,9 @@ const ERROR_LOG = './output/errorlog-get-contract-name';
       try {
         const contract = new ethers.Contract(address, ABI, provider);
         const name = await contract.name();
+        const sanitizedName = name.replace(/'/g, "''");
 
-        await db.run('INSERT OR REPLACE INTO contract_name (address, name, processed) VALUES (?, ?, ?)', [address, name, timestamp]);
+        await db.run('INSERT OR REPLACE INTO contract_name (address, name, processed) VALUES (?, ?, ?)', [address, sanitizedName, timestamp]);
 
         console.log(`${address}: ${name}`);
         updates++;

@@ -3,7 +3,7 @@ const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const Utils = require('./utils');
 
-const OUTPUT_PATH = './output/unnamed-contracts.html';
+const OUTPUT_PATH = './reports/unnamed-contracts.html';
 
 (async () => {
   try {

@@ -7,7 +7,7 @@ const Utils = require('./utils');
 const Config = require('./config.json');
 
 const WAIT_TIME = 250;
-const OUTPUT_PATH = './output/output-contract-balances.html';
+const OUTPUT_PATH = './reports/output-contract-balances.html';
 
 (async () => {
   try {

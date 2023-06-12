@@ -2,7 +2,7 @@ const fs = require('fs');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 
-const OUTPUT_PATH = './output/named-contracts.html';
+const OUTPUT_PATH = './reports/named-contracts.html';
 
 (async () => {
   try {

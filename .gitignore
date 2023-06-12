@@ -3,6 +3,8 @@ config.json
 contract-address.db
 input/*
 output/*
+reports/*
+error-logs/*
 
 # Logs
 logs
