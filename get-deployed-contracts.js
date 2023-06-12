@@ -9,7 +9,7 @@ const CONFIG = require('./config.json');
 // const BLOCK_END = 17380000;
 // const BLOCK_END = 17380000;
 
-const BLOCK_START = 17285371; // May 18th~
+const BLOCK_START = 17285654; // May 18th~
 const BLOCK_END = 17380000; // May 31st~
 
 // Given a block, return list of transactions
@@ -32,6 +32,7 @@ async function getTransactions(provider, block) {
     });
 
     await db.run('CREATE TABLE IF NOT EXISTS contracts (address TEXT PRIMARY KEY, block INT, deployer TEXT, bytecode TEXT)');
+    let counter = 0;
 
     for (let block = BLOCK_START; block <= BLOCK_END; block++) {
       console.time(block);
@@ -43,14 +44,17 @@ async function getTransactions(provider, block) {
           const deployer = transaction.from;
           const bytecode = transaction.data;
 
-          console.log(`Contract found: ${address}`);
           await db.run('INSERT INTO contracts (address, block, deployer, bytecode) VALUES (?, ?, ?, ?)', [address, block, deployer, bytecode]);
+
+          counter++;
+          console.log(`Contract found: ${address}`);
         }
       }
 
       console.timeEnd(block);
     }
 
+    console.log(`${counter} contracts found`);
     console.timeEnd('Total Run Time');
     await db.close();
   } catch (err) {
