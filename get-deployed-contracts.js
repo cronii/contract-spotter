@@ -5,17 +5,17 @@ const { open } = require('sqlite');
 const CONFIG = require('./config.json');
 
 // const BLOCK_START = 17165000; // May 1st
-const BLOCK_START = 17283927;
-const BLOCK_END = 17380000;
+// const BLOCK_START = 17283927;
+// const BLOCK_END = 17380000;
 // const BLOCK_END = 17380000;
 
-const WAIT_TIME = 50;
+const BLOCK_START = 17283947; // May 18th~
+const BLOCK_END = 17380000; // May 31st~
 
 // Given a block, return list of transactions
 async function getTransactions(provider, block) {
   try {
     const blockWithTransactions = await provider.getBlockWithTransactions(block);
-    await new Promise(resolve => setTimeout(resolve, WAIT_TIME));
     return blockWithTransactions.transactions;
   } catch (error) {
     console.log(error);
@@ -25,7 +25,7 @@ async function getTransactions(provider, block) {
 (async () => {
   try {
     console.time('Total Run Time');
-    const provider = new ethers.providers.JsonRpcProvider(CONFIG.rpcAlchemy);
+    const provider = new ethers.providers.JsonRpcProvider(CONFIG.rpcGeth);
     const db = await open({
       filename: 'contract-address.db',
       driver: sqlite3.Database

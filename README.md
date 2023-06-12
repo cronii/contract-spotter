@@ -1,17 +1,12 @@
 # contract-spotter
-scripts to find contracts deployed in a block range
-
-- `node index.js` populates local contract-address.db with contracts deployed in a given block range
-- `node output-contracts` 
+garbage, rigid scripts to find contracts deployed in a block range
 
 ## requirements
-- prefer self hosted node
-- etherscan api key
-- chifra
+- json rpc, prefer self hosted node to avoid rate limiting
+- etherscan api key: grab tx counts for contracts
+- chifra: idk yet
 
 ## todo
-- pull and record contract ABI
-- recreate repo, infura api is exposed
 
 ## reach
 - run persistently

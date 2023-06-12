@@ -19,11 +19,24 @@ const ABI = [{
   ],
   stateMutability: 'view',
   type: 'function'
+},
+{
+  inputs: [],
+  name: 'symbol',
+  outputs: [
+    {
+      internalType: 'string',
+      name: '',
+      type: 'string'
+    }
+  ],
+  stateMutability: 'view',
+  type: 'function'
 }];
 
 (async () => {
   try {
-    const provider = new ethers.providers.JsonRpcProvider(CONFIG.rpcAlchemy);
+    const provider = new ethers.providers.JsonRpcProvider(CONFIG.rpcGeth);
     const db = await open({
       filename: 'contract-address.db',
       driver: sqlite3.Database
