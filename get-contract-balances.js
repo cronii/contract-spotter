@@ -19,13 +19,9 @@ const ERROR_LOG = './error-logs/error-get-contract-balance';
 
     const timestamp = Date.now();
     console.time('total run time');
-    let updates = 0;
 
     const query = `SELECT * FROM v_contract_info
     WHERE name IS NULL
-    AND usdc IS NULL
-    AND usdt IS NULL
-    AND weth IS NULL
     AND balanceProcessed IS NULL`;
 
     const contractAddresses = await db.all(query);
@@ -66,7 +62,6 @@ const ERROR_LOG = './error-logs/error-get-contract-balance';
           console.log(`${address}: ${realWETH} WETH`);
         }
 
-        updates++;
         console.timeEnd(address);
       } catch (error) {
         console.error(error);
@@ -75,7 +70,6 @@ const ERROR_LOG = './error-logs/error-get-contract-balance';
     }
 
     console.log(`${contractAddresses.length} contracts processed`);
-    console.log(`${updates} updated contracts`);
     console.timeEnd('total run time');
     await db.close();
   } catch (err) {

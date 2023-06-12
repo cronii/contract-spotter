@@ -27,6 +27,6 @@ const OUTPUT_PATH = './reports/unnamed-contracts.html';
     console.log(`${contracts.length} contracts found`);
     await db.close();
   } catch (err) {
-    console.error();
+    console.error(err);
   }
 })();

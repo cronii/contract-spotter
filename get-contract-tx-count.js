@@ -34,6 +34,6 @@ const fetch = require('node-fetch');
 
     await db.close();
   } catch (err) {
-    console.error();
+    console.error(err);
   }
 })();

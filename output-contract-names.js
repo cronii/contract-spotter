@@ -1,6 +1,7 @@
-const fs = require('fs');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
+
+const Utils = require('./utils/utils');
 
 const OUTPUT_PATH = './reports/named-contracts.html';
 
@@ -11,20 +12,22 @@ const OUTPUT_PATH = './reports/named-contracts.html';
       driver: sqlite3.Database
     });
 
-    // get all contracts deployed
-    const contracts = await db.all('SELECT * FROM contract_name');
+    // get all named contracts
+    const query = `SELECT address, name FROM v_contract_info
+    WHERE name IS NOT NULL
+    ORDER BY name DESC`;
 
-    // empty file before appending
-    await fs.promises.writeFile(OUTPUT_PATH, '');
+    const contracts = await db.all(query);
+    await db.close();
 
+    const reportContents = [];
     for (const contract of contracts) {
       const { address, name } = contract;
-      const wrappedElement = `<div><a href="https://etherscan.io/address/${address}">${address}: ${name}</a></div>\n`;
-      await fs.promises.appendFile(OUTPUT_PATH, wrappedElement + '\n');
+      reportContents.push({ address: Utils.toEtherscanAddressHTML(address), name });
     }
 
-    await db.close();
+    await Utils.generateReport(OUTPUT_PATH, reportContents);
   } catch (err) {
-    console.error();
+    console.error(err);
   }
 })();

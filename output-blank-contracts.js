@@ -26,6 +26,6 @@ const OUTPUT_PATH = './reports/blank-contract-tx-count.html';
     console.log(`${contracts.length} contracts returned`);
     await db.close();
   } catch (err) {
-    console.error();
+    console.error(err);
   }
 })();
