@@ -9,7 +9,7 @@ const CONFIG = require('./config.json');
 // const BLOCK_END = 17380000;
 // const BLOCK_END = 17380000;
 
-const BLOCK_START = 17283947; // May 18th~
+const BLOCK_START = 17285371; // May 18th~
 const BLOCK_END = 17380000; // May 31st~
 
 // Given a block, return list of transactions

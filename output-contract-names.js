@@ -12,7 +12,7 @@ const OUTPUT_PATH = './output/named-contracts.html';
     });
 
     // get all contracts deployed
-    const contracts = await db.all('SELECT * FROM contract_info');
+    const contracts = await db.all('SELECT * FROM contract_name');
 
     // empty file before appending
     await fs.promises.writeFile(OUTPUT_PATH, '');

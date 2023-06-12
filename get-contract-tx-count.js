@@ -17,7 +17,7 @@ const fetch = require('node-fetch');
     // const contracts = await db.all('SELECT address FROM contracts');
 
     // get all unnamed contracts
-    const contracts = await db.all('SELECT contracts.address FROM contracts LEFT JOIN contract_info ON contracts.address = contract_info.address WHERE contract_info.name IS NULL');
+    const contracts = await db.all('SELECT contracts.address FROM contracts LEFT JOIN contract_name ON contracts.address = contract_name.address WHERE contract_name.name IS NULL');
 
     await db.run('CREATE TABLE IF NOT EXISTS contract_tx (address TEXT PRIMARY KEY, transactions INT)');
 

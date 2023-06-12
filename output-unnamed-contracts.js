@@ -13,7 +13,7 @@ const OUTPUT_PATH = './output/unnamed-contracts.html';
     });
 
     // get contracts that do not have contract.name populated
-    const contracts = await db.all('SELECT contracts.address FROM contracts LEFT JOIN contract_info ON contracts.address = contract_info.address WHERE contract_info.name IS NULL');
+    const contracts = await db.all('SELECT contracts.address FROM contracts LEFT JOIN contract_name ON contracts.address = contract_name.address WHERE contract_name.name IS NULL');
 
     // empty file before appending
     await fs.promises.writeFile(OUTPUT_PATH, '');

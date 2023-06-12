@@ -35,7 +35,9 @@ const COMMON_TOKENS = {
     // ethers.utils.formatUnits()
 
     // get addresses from contact_tx (which is only populated with contracts that did not return anything from name function)
-    const query = 'SELECT contract_tx.address FROM contract_tx LEFT JOIN contract_symbols ON contract_tx.address = contract_symbols.address WHERE contract_symbols.symbol IS NULL AND contract_tx.transactions > 1';
+    // const query = 'SELECT contract_tx.address FROM contract_tx LEFT JOIN contract_symbols ON contract_tx.address = contract_symbols.address WHERE contract_symbols.symbol IS NULL AND contract_tx.transactions > 1';
+
+    const query = 'SELECT * FROM v_contract_info';
     const contractAddresses = await db.all(query);
 
     await db.run('CREATE TABLE IF NOT EXISTS contract_balances (address TEXT PRIMARY KEY, usdc REAL, usdt REAL, weth REAL)');
