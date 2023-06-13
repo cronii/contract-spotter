@@ -1,7 +1,7 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
 
-const Config = require('./config.json');
+const Config = require('../config.json');
 
 const WAIT_TIME = 250;
 

@@ -5,12 +5,11 @@ const { open } = require('sqlite');
 const CONFIG = require('./config.json');
 
 // const BLOCK_START = 17165000; // May 1st
-// const BLOCK_START = 17283927;
-// const BLOCK_END = 17380000;
-// const BLOCK_END = 17380000;
+// const BLOCK_START = 17285654; // May 18th~
+// const BLOCK_END = 17380000; // May 31st~
 
-const BLOCK_START = 17285654; // May 18th~
-const BLOCK_END = 17380000; // May 31st~
+const BLOCK_START = 17065000; // April 17th~
+const BLOCK_END = 17361664; // May 1st~
 
 // Given a block, return list of transactions
 async function getTransactions(provider, block) {
