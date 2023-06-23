@@ -3,7 +3,10 @@ const { open } = require('sqlite');
 
 const Utils = require('./utils/utils');
 
-const OUTPUT_PATH = './reports/named-contracts.html';
+const OUTPUT_PATH = './reports/named-contracts-2.html';
+
+const BLOCK_START = 17537000; // April 17th~
+const BLOCK_END = 17538151; // May 1st~
 
 (async () => {
   try {
@@ -14,7 +17,8 @@ const OUTPUT_PATH = './reports/named-contracts.html';
 
     // get all named contracts
     const query = `SELECT address, name FROM v_contract_info
-    WHERE name IS NOT NULL
+    WHERE block >= ${BLOCK_START}
+    AND block <= ${BLOCK_END}
     ORDER BY name DESC`;
 
     const contracts = await db.all(query);

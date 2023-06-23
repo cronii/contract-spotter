@@ -8,6 +8,9 @@ const ABI = require('./utils/abi-erc-20.json');
 
 const ERROR_LOG = './error-logs/error-get-contract-name';
 
+const BLOCK_START = 17537000; // April 17th~
+const BLOCK_END = 17538151; // May 1st~
+
 (async () => {
   try {
     const provider = new ethers.providers.JsonRpcProvider(CONFIG.rpcGeth);
@@ -21,7 +24,9 @@ const ERROR_LOG = './error-logs/error-get-contract-name';
 
     const query = `SELECT * FROM v_contract_info
     WHERE name IS NULL
-    AND nameProcessed IS NULL`;
+    AND nameProcessed IS NULL
+    AND block >= ${BLOCK_START}
+    AND block <= ${BLOCK_END}`;
 
     const contractAddresses = await db.all(query);
     console.log(`${contractAddresses.length} contracts found`);

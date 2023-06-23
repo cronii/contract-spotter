@@ -55,9 +55,20 @@ async function getEtherscanContractName(address) {
   return data.result[0].ContractName || '';
 }
 
+async function getEtherscanTxList(address) {
+  const apiCall = `https://api.etherscan.io/api?module=contract&action=getsourcecode&address=${address}&apikey=${Config.etherscanApiKey}`;
+
+  const response = await fetch(apiCall);
+  const data = await response.json();
+  await new Promise(resolve => setTimeout(resolve, WAIT_TIME));
+
+  return data.result[0].ContractName || '';
+}
+
 module.exports = {
   toEtherscanLink,
   toEtherscanAddressHTML,
   getEtherscanContractName,
+  getEtherscanTxList,
   generateReport
 };

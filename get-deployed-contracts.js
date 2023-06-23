@@ -4,14 +4,11 @@ const { open } = require('sqlite');
 
 const CONFIG = require('./config.json');
 
-// const BLOCK_START = 17165000; // May 1st
-// const BLOCK_START = 17285654; // May 18th~
-// const BLOCK_END = 17380000; // May 31st~
+const BLOCK_START = 17065000;
+const BLOCK_END = 17361664;
 
-const BLOCK_START = 17065000; // April 17th~
-const BLOCK_END = 17361664; // May 1st~
+const CHUNK_SIZE = 50; // Adjust this based on your system's capacity
 
-// Given a block, return list of transactions
 async function getTransactions(provider, block) {
   try {
     const blockWithTransactions = await provider.getBlockWithTransactions(block);
@@ -33,24 +30,36 @@ async function getTransactions(provider, block) {
     await db.run('CREATE TABLE IF NOT EXISTS contracts (address TEXT PRIMARY KEY, block INT, deployer TEXT, bytecode TEXT)');
     let counter = 0;
 
-    for (let block = BLOCK_START; block <= BLOCK_END; block++) {
-      console.time(block);
-      const transactions = await getTransactions(provider, block);
+    for (let chunkStart = BLOCK_START; chunkStart <= BLOCK_END; chunkStart += CHUNK_SIZE) {
+      const chunkEnd = Math.min(chunkStart + CHUNK_SIZE - 1, BLOCK_END);
+      const promises = [];
 
-      for (const transaction of transactions) {
-        if (transaction.creates !== null) {
-          const address = transaction.creates;
-          const deployer = transaction.from;
-          const bytecode = transaction.data;
-
-          await db.run('INSERT INTO contracts (address, block, deployer, bytecode) VALUES (?, ?, ?, ?)', [address, block, deployer, bytecode]);
-
-          counter++;
-          console.log(`Contract found: ${address}`);
-        }
+      for (let block = chunkStart; block <= chunkEnd; block++) {
+        promises.push(getTransactions(provider, block));
       }
 
-      console.timeEnd(block);
+      const allTransactions = await Promise.all(promises);
+      const sqlInserts = [];
+
+      allTransactions.forEach((transactions, index) => {
+        transactions.forEach((transaction) => {
+          if (transaction.creates !== null) {
+            const address = transaction.creates;
+            const deployer = transaction.from;
+            const bytecode = transaction.data;
+            const block = chunkStart + index;
+
+            sqlInserts.push(`INSERT INTO contracts (address, block, deployer, bytecode) VALUES ('${address}', ${block}, '${deployer}', '${bytecode}')`);
+
+            counter++;
+            console.log(`Contract found: ${address}`);
+          }
+        });
+      });
+
+      if (sqlInserts.length > 0) {
+        await db.run(sqlInserts.join(';'));
+      }
     }
 
     console.log(`${counter} contracts found`);
